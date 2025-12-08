@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    --theme-orange: #FF4D30;
+    --theme-dark: #1C1C1C;
+    --theme-gray: #F3F3F3;
+}
+
+body {
+    @apply bg-white text-[#1C1C1C] antialiased selection:bg-[#FF4D30] selection:text-white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-white;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #9ca3af;
+}
+
+/* Button Styles */
+.btn-primary {
+    @apply bg-[#FF4D30] text-white px-8 py-4 rounded-full font-bold hover:bg-[#e04328] transition-all shadow-lg shadow-orange-500/20 active:scale-95 flex items-center justify-center gap-2;
+}
+
+.btn-outline {
+    @apply bg-transparent border-2 border-[#1C1C1C] text-[#1C1C1C] px-8 py-4 rounded-full font-bold hover:bg-[#1C1C1C] hover:text-white transition-all active:scale-95 flex items-center justify-center gap-2;
+}
+
+/* Section Utilities */
+.section-dark {
+    @apply bg-[#1C1C1C] text-white;
+}
+
+.card-service {
+    @apply bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-orange-500/20 transition-all duration-300 relative overflow-hidden;
+}
+
+.gradient-text {
+    @apply text-[#FF4D30];
+}
+
+/* Timeline */
+.timeline-dot {
+    @apply absolute left-0 w-3 h-3 bg-[#FF4D30] rounded-full mt-1.5 ring-4 ring-white;
+}

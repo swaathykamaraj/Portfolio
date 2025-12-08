@@ -1,0 +1,129 @@
+{
+    "profile": {
+        "name": "Swaathy Kamaraj",
+        "role": "Senior Product Manager",
+        "tagline": "Digital Product Growth | AI-Driven Customer Experience Strategy",
+        "location": "Chennai, India",
+        "email": "swaathykamaraj@gmail.com",
+        "phone": "+91-8925414761",
+        "linkedin": "Linked In",
+        "summary": "Product Manager with 7 years of progressive experience in building, scaling, and optimizing high-traffic B2C digital products across e-commerce and large-scale consumer ecosystems. Proven expertise in leading the end-to-end product strategy for critical storefront touchpoints to drive engagement and revenue. Skilled in applying data, AI-driven insights and A/B experimentation frameworks to deliver high-conversion consumer experiences. Adept at stakeholder alignment, mentoring, and championing a culture of customer obsession and product excellence."
+    },
+    "core_expertise": [
+        "0→1 Product Development",
+        "OKRs & Business Metrics",
+        "Product Sense",
+        "User Behaviour & Funnel Analytics",
+        "Customer Retention & NPS",
+        "Product Strategy & Roadmapping",
+        "Optimization & A/B Testing",
+        "Agile/Scrum Execution",
+        "Pricing & Promotional Strategy",
+        "AI-Driven Customer Experience",
+        "Cross-Functional Leadership",
+        "Market & Competitor Analysis"
+    ],
+    "experience": [
+        {
+            "id": 1,
+            "role": "Technical Product Manager",
+            "company": "Samsung SDS (Programming.com)",
+            "period": "Aug 2024 – Present",
+            "focus": "D2C Global E-commerce",
+            "achievements": [
+                "Led cross-functional teams to define and execute the growth strategy across 25+ global Samsung Shop markets, leveraging funnel analysis on the storefront to boost engagement and increase order completion rate by 9%.",
+                "Developed and standardized category-level OKRs and KPI frameworks for device pricing and promotional effectiveness, driving a 12% increase in promotional ROI.",
+                "Directed in-depth consumer research that surfaced 10+ actionable market opportunities in discovery flows, generating $5M in annualized incremental revenue.",
+                "Partnered with Design, Engineering, and Marketing teams to execute a rigorous A/B testing roadmap across the storefront, focused on high-impact optimizations and personalization for the Home Page, PDP, and Checkout, driving a 13% improvement in conversion funnel performance.",
+                "Owned and maintained insight dashboards tracking revenue, traffic quality, and retention, which reduced the product iteration cycle time by 30% via real-time stakeholder alignment.",
+                "Cultivated a culture of product excellence by actively mentoring 3+ junior PMs on experimentation best practices, data-driven decision making, and defining scalable features for the storefront."
+            ],
+            "tags": [
+                "Growth Strategy",
+                "Funnel Analysis",
+                "A/B Testing",
+                "OKRs"
+            ]
+        },
+        {
+            "id": 2,
+            "role": "Product Manager",
+            "company": "Verizon Data Services",
+            "period": "Apr 2023 – Jan 2024",
+            "achievements": [
+                "Improved product adoption by 25% by leveraging in-depth market research and customer journey analysis, demonstrating customer empathy in feature prioritization.",
+                "Improved retention and user satisfaction by continuously measuring NPS, tracking task success, and identifying critical drop-off points in the user journey, resulting in a 9% increase in user retention and a 13% NPS improvement.",
+                "Drove sprint planning, backlog grooming, and cross-team dependency management, resulting in a 20% improvement in product delivery efficiency."
+            ],
+            "tags": [
+                "Product Adoption",
+                "NPS",
+                "Agile Leadership"
+            ]
+        },
+        {
+            "id": 3,
+            "role": "Product Owner – Analytics & AI",
+            "company": "Sitel Group - Foundever",
+            "period": "May 2021 – Apr 2023",
+            "achievements": [
+                "Collaborated with Engineering and Data Science teams to design and execute intent modeling and predictive analytics features within the CX product portfolio, successfully improving chatbot containment by 27%.",
+                "Managed a $12M+ CX product portfolio, focusing on behavioral analytics and automation to reduce customer support load and improve efficiency.",
+                "Led A/B experiments on conversation design and UX structure to improve CSAT and retention, fostering a culture of rapid prototyping and continuous improvement."
+            ],
+            "tags": [
+                "AI & Predictive Analytics",
+                "CX Strategy",
+                "Chatbot Containment"
+            ]
+        },
+        {
+            "id": 4,
+            "role": "Business Analyst",
+            "company": "Tata Consultancy Services",
+            "period": "Jul 2018 – Mar 2021",
+            "achievements": [
+                "Gathered and translated business requirements into feature specifications for internal and client-facing tools, resulting in 16% improvement in project delivery efficiency.",
+                "Mapped end-to-end product workflows and identified process gaps, resulting in improved user efficiency by 11% and enhanced overall user experience.",
+                "Created functional documentation, wireframes, and acceptance criteria for engineering teams.",
+                "Conducted UAT cycles, validating feature functionality before production release.",
+                "Supported project managers in tracking progress, stakeholder collaboration, and delivery governance."
+            ],
+            "tags": [
+                "Business Requirements",
+                "Workflow Mapping",
+                "UAT"
+            ]
+        }
+    ],
+    "education": [
+        {
+            "degree": "M.Tech – AI & ML (Work Integrated Learning Program)",
+            "school": "BITS Pilani",
+            "year": "2025 – 2027"
+        },
+        {
+            "degree": "MBA – Technology Management",
+            "school": "SRM University, Chennai",
+            "year": "2016 – 2018"
+        },
+        {
+            "degree": "B.E. – Computer Science Engineering",
+            "school": "Sri Venkateswara College of Engineering",
+            "year": "2012 – 2016"
+        }
+    ],
+    "certifications": [
+        "Professional Scrum Product Owner (PSPO-I)",
+        "Adobe Analytics",
+        "Power BI",
+        "Appsflyer",
+        "Insider",
+        "JIRA",
+        "Confluence",
+        "Figma",
+        "SQL Basics",
+        "Azure",
+        "AWS"
+    ]
+}
