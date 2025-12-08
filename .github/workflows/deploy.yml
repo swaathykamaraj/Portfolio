@@ -23,12 +23,10 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd mark2
           npm install
 
       - name: Build
         run: |
-          cd mark2
           npm run build
 
       - name: Deploy
