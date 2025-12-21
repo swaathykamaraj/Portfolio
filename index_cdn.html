@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swaathy Kamaraj - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Plus Jakarta Sans', 'sans-serif'],
+                        'outfit': ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        'theme-orange': '#FF4D30',
+                        'theme-dark': '#1C1C1C',
+                        'theme-gray': '#F3F3F3',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- React & ReactDOM UMD -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Framer Motion UMD -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Babel Standalone -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style type="text/tailwindcss">
+        /* Custom Scrollbar */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: white;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #9ca3af;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            @apply bg-[#FF4D30] text-white px-8 py-4 rounded-full font-bold hover:bg-[#e04328] transition-all shadow-lg shadow-orange-500/20 active:scale-95 flex items-center justify-center gap-2;
+        }
+
+        .btn-outline {
+            @apply bg-transparent border-2 border-[#1C1C1C] text-[#1C1C1C] px-8 py-4 rounded-full font-bold hover:bg-[#1C1C1C] hover:text-white transition-all active:scale-95 flex items-center justify-center gap-2;
+        }
+
+        /* Chatbot Styles */
+        .chat-message {
+            @apply p-3 rounded-2xl max-w-[80%] text-sm;
+        }
+
+        .chat-user {
+            @apply bg-[#FF4D30] text-white self-end rounded-br-none;
+        }
+
+        .chat-bot {
+            @apply bg-gray-100 text-gray-800 self-start rounded-bl-none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Destructure globals
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.Motion || window.framerMotion || {};
+
+        // Phosphor Icons Adapter
+        const IconWrapper = (className) => ({ size = 24, color, strokeWidth, ...props }) => (
+            <i
+                className={`ph ${className}`}
+                style={{
+                    fontSize: size,
+                    color: color,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    verticalAlign: 'middle',
+                    fontWeight: strokeWidth ? (strokeWidth > 2 ? 'bold' : 'normal') : 'normal',
+                    ...props.style
+                }}
+                {...props}
+            />
+        );
+
+        const ArrowUpRight = IconWrapper("ph-arrow-up-right");
+        const Download = IconWrapper("ph-download-simple");
+        const Mail = IconWrapper("ph-envelope");
+        const ChevronRight = IconWrapper("ph-caret-right");
+        const Star = IconWrapper("ph-star");
+        const MapPin = IconWrapper("ph-map-pin");
+        const Phone = IconWrapper("ph-phone");
+        const Linkedin = IconWrapper("ph-linkedin-logo");
+        const Calendar = IconWrapper("ph-calendar-blank");
+        const CheckCircle = IconWrapper("ph-check-circle");
+        const Briefcase = IconWrapper("ph-briefcase");
+        const Send = IconWrapper("ph-paper-plane-right");
+        const MessageSquare = IconWrapper("ph-chat-circle");
+        const Menu = IconWrapper("ph-list");
+        const X = IconWrapper("ph-x");
+        const ArrowRight = IconWrapper("ph-arrow-right");
+        const MessageCircle = IconWrapper("ph-chat-circle-dots");
+        const Brain = IconWrapper("ph-brain");
+        const TrendingUp = IconWrapper("ph-trend-up");
+        const Code = IconWrapper("ph-code");
+        const GraduationCap = IconWrapper("ph-graduation-cap");
+
+        // Mock object for dynamic lookups (like in the education section)
+        const lucideIcons = {
+            ArrowUpRight, Download, Mail, ChevronRight, Star,
+            MapPin, Phone, Linkedin, Calendar, CheckCircle,
+            Briefcase, Send, MessageSquare, Menu, X, ArrowRight,
+            MessageCircle, Brain, TrendingUp, Code, GraduationCap
+        };
+
+        // Services Data
+        const services = [
+            {
+                label: "Product Strategy",
+                title: "0→1 & Growth Product Management",
+                details: ["End-to-end product discovery & delivery", "OKRs, business metrics & product sense", "Roadmapping & stakeholder alignment"]
+            },
+            {
+                label: "Analytics & Experimentation",
+                title: "Data-Driven Decision Making",
+                details: ["User behaviour & funnel analytics", "Optimization & A/B testing frameworks", "Retention, NPS & pricing strategy"]
+            },
+            {
+                label: "AI & CX Products",
+                title: "AI-Driven Customer Experience",
+                details: ["Intent modeling & predictive analytics", "Global CX product portfolios", "Chatbots & automation for support load reduction"]
+            },
+        ];
+
+        // Resume Data (Preserving existing data where not explicitly replaced)
+        const resumeData = {
+            "profile": {
+                "name": "Swaathy Kamaraj",
+                "role": "Senior Product Manager",
+                "tagline": "Digital Product Growth | AI-Driven Customer Experience Strategy",
+                "location": "India",
+                "email": "swaathykamaraj@gmail.com",
+                "linkedin": "http://linkedin.com/in/swaathy-kamaraj/",
+                "summary": "Product Manager with 7 years of progressive experience..."
+            },
+            "core_expertise": [
+                "0→1 Product Development",
+                "OKRs & Business Metrics",
+                "Product Sense",
+                "User Behaviour & Funnel Analytics",
+                "Customer Retention & NPS",
+                "Product Strategy & Roadmapping",
+                "Optimization & A/B Testing",
+                "Agile/Scrum Execution",
+                "Pricing & Promotional Strategy",
+                "AI-Driven Customer Experience",
+                "Cross-Functional Leadership",
+                "Market & Competitor Analysis"
+            ],
+            "experience": [
+                {
+                    "id": 1,
+                    "role": "Technical Product Manager",
+                    "company": "Programming.com (Samsung)",
+                    "period": "Aug 2024 – Present",
+                    "focus": "D2C Global E-commerce",
+                    "achievements": [
+                        "Led cross-functional teams to define and execute the growth strategy across 25+ global Samsung Shop markets.",
+                        "Developed and standardized category-level OKRs and KPI frameworks.",
+                        "Directed in-depth consumer research that surfaced 10+ actionable market opportunities.",
+                        "Partnered with Design, Engineering, and Marketing teams to execute a rigorous A/B testing roadmap."
+                    ],
+                    "tags": ["Growth Strategy", "Funnel Analysis", "A/B Testing", "OKRs"],
+                    "icon": "Briefcase"
+                },
+                {
+                    "id": 2,
+                    "role": "Product Manager\n",
+                    "company": "Verizon Data Services",
+                    "period": "Apr 2023 – Jan 2024",
+                    "achievements": [
+                        "Improved product adoption by 25% by leveraging in-depth market research.\n",
+                        "Improved retention and user satisfaction by continuously measuring NPS.",
+                        "Drove sprint planning, backlog grooming, and cross-team dependency management."
+                    ],
+                    "tags": ["Product Adoption", "NPS", "Agile Leadership"],
+                    "icon": "Phone"
+                },
+                {
+                    "id": 3,
+                    "role": "Product Owner – Analytics & AI",
+                    "company": "Sitel Group - Foundever",
+                    "period": "May 2021 – Apr 2023",
+                    "achievements": [
+                        "Collaborated with Engineering and Data Science teams to design intent modeling.\n",
+                        "Managed a $12M+ CX product portfolio focusing on behavioral analytics.",
+                        "Led A/B experiments on conversation design and UX structure."
+                    ],
+                    "tags": ["AI & Predictive Analytics", "CX Strategy", "Chatbot Containment"],
+                    "icon": "MessageCircle"
+                },
+                {
+                    "id": 4,
+                    "role": "Business Analyst",
+                    "company": "Tata Consultancy Services",
+                    "period": "Jul 2018 – Mar 2021",
+                    "achievements": [
+                        "Gathered and translated business requirements into feature specifications.\n",
+                        "Mapped end-to-end product workflows and identified process gaps.",
+                        "Created functional documentation, wireframes, and acceptance criteria."
+                    ],
+                    "tags": ["Business Requirements", "Workflow Mapping", "UAT"],
+                    "icon": "CheckCircle"
+                }
+            ],
+            "education": [
+                {
+                    "degree": "M.Tech – AI & ML\n(WILP)",
+                    "school": "BITS Pilani",
+                    "year": "2025 – 2027",
+                    "icon": "Brain"
+                },
+                {
+                    "degree": "MBA – Technology Management",
+                    "school": "SRM University",
+                    "year": "2016 – 2018",
+                    "icon": "TrendingUp"
+                },
+                {
+                    "degree": "B.E. – Computer Science Engineering",
+                    "school": "SVCE",
+                    "year": "2012 – 2016",
+                    "icon": "Code"
+                }
+            ]
+        };
+
+        // --- Components ---
+
+        const NavBar = () => {
+            const [scrolled, setScrolled] = useState(false);
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'py-4 bg-white/90 backdrop-blur-md shadow-sm' : 'py-8 bg-transparent'}`}>
+                    <div className="container mx-auto px-6 flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <div className="w-10 h-10 bg-[#FF4D30] rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                S
+                            </div>
+                            <span className="font-['Outfit'] font-bold text-2xl text-[#1C1C1C]">Swaathy Kamaraj<span className="text-[#FF4D30]">.</span></span>
+                        </div>
+
+                        <div className="hidden md:flex items-center gap-8 font-medium text-gray-600">
+                            <a href="#home" className="text-[#FF4D30]">Home</a>
+                            <a href="#competencies" className="hover:text-[#1C1C1C] transition-colors">Competencies</a>
+                            <a href="#work" className="hover:text-[#1C1C1C] transition-colors">Work</a>
+                            <a href="#journey" className="hover:text-[#1C1C1C] transition-colors">Journey</a>
+                            <a href="#contact" className="hover:text-[#1C1C1C] transition-colors">Contact</a>
+                        </div>
+
+                        <a href="https://calendar.app.google/a9MtaoGJtK2biFut6" target="_blank" rel="noopener noreferrer" className="hidden md:flex bg-black text-white px-6 py-2.5 rounded-full font-medium hover:bg-[#FF4D30] transition-colors">
+                            Let's Talk
+                        </a>
+
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 text-black">
+                            {Menu && <Menu size={24} />}
+                        </button>
+                    </div>
+                </nav>
+            );
+        };
+
+        const ChatBot = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [messages, setMessages] = useState([
+                { text: "Hi! I'm Swaathy's AI assistant. Ask me about her work, philosophy, or schedule a call!", isBot: true }
+            ]);
+            const [input, setInput] = useState("");
+            const [activeCategory, setActiveCategory] = useState(null);
+            const messagesEndRef = useRef(null);
+
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+            }, [messages]);
+
+            const intentMap = {
+                "About Me": [
+                    "What makes you unique?",
+                    "What's your background?",
+                    "What motivates you?",
+                    "What roles are you targeting?",
+                    "What industries have you worked in?"
+                ],
+                "Show My Work": [
+                    "AI / Conversation Insights",
+                    "Discovery / Retail Project",
+                    "Funnel Optimization",
+                    "Impact Created",
+                    "Approach to Case Studies"
+                ],
+                "AI & Analytics": [
+                    "How do you use data?",
+                    "Approach to Conversational AI",
+                    "Improving Automation",
+                    "Collaboration with Data Teams",
+                    "Handling Ambiguity"
+                ],
+                "Philosophy": [
+                    "Decision Making",
+                    "Breaking Down Complexity",
+                    "User Empathy",
+                    "Differentiation as PM",
+                    "Product Approach"
+                ],
+                "Schedule a Call": [
+                    "Can I schedule a call?",
+                    "What happens in the call?",
+                    "Best way to reach you?",
+                    "Relocation / Remote?",
+                    "Info needed before call?"
+                ]
+            };
+
+            const handleSend = (e, textOverride = null) => {
+                if (e) e.preventDefault();
+                const userText = textOverride || input;
+                if (!userText.trim()) return;
+
+                // Handle Primary Intent Click
+                if (intentMap[userText]) {
+                    setActiveCategory(userText);
+                    setMessages(prev => [...prev, { text: userText, isBot: false }]);
+                    setTimeout(() => {
+                        setMessages(prev => [...prev, { text: `Here are some things you can ask me about ${userText}:`, isBot: true }]);
+                    }, 500);
+                    return;
+                }
+
+                // Handle Back Button
+                if (userText === "← Back") {
+                    setActiveCategory(null);
+                    return;
+                }
+
+                const userMsg = { text: userText, isBot: false };
+                setMessages(prev => [...prev, userMsg]);
+                setInput("");
+
+                // --- INTENT LOGIC ---
+                let botText = "I'm not sure about that. Try asking about my background, projects, AI experience, philosophy, or scheduling a call.";
+                const lower = userText.toLowerCase();
+
+                // --- CATEGORY 1: ABOUT ME ---
+                if (lower.includes("who") || lower.includes("about") || lower.includes("swaathy") || lower.includes("background") || lower.includes("unique") || lower.includes("motivate") || lower.includes("role") || lower.includes("target") || lower.includes("industry")) {
+                    if (lower.includes("unique")) {
+                        botText = "What makes me unique is my ability to bring clarity into messy, ambiguous problem spaces. I’m strong at identifying the real bottleneck, structuring the problem, and designing systems that help users make confident decisions.";
+                    } else if (lower.includes("background")) {
+                        botText = "I have deep experience across e-commerce, AI-driven customer experience, conversational platforms, and retail enablement systems. I’ve worked across global markets, improving funnels, elevating decision journeys, and shaping user behaviour at scale.";
+                    } else if (lower.includes("motivate") || lower.includes("drive")) {
+                        botText = "I’m driven by clarity. I love the moment when a complex problem becomes structured and solvable — when insight, behaviour, and design come together to unlock a better experience.";
+                    } else if (lower.includes("role") || lower.includes("target") || lower.includes("looking for")) {
+                        botText = "I’m targeting full-time Senior Product Manager roles in consumer products, growth funnels, AI-enhanced experiences, and decision-led product ecosystems.";
+                    } else if (lower.includes("industry") || lower.includes("industries")) {
+                        botText = "I’ve worked across e-commerce, AI and conversational tools, customer support platforms, analytics, and retail experience systems.";
+                    } else {
+                        botText = "Swaathy is a Senior Product Manager who specializes in behaviour-led experience design, funnel optimization, and AI-driven CX. She turns ambiguous problems into structured, clarity-first solutions.";
+                    }
+                }
+
+                // --- CATEGORY 2: WORK / PROJECTS ---
+                else if (lower.includes("project") || lower.includes("work") || lower.includes("portfolio") || lower.includes("case study") || lower.includes("impact") || lower.includes("result") || lower.includes("show me")) {
+                    if (lower.includes("ai") || lower.includes("conversation") || lower.includes("insight") || lower.includes("chatbot")) {
+                        botText = "I redesigned a chatbot ecosystem into a conversation intelligence platform. I introduced intent taxonomies, failure pattern detection, confidence scoring, and training loops — helping teams finally understand why conversations break and how to fix them.";
+                    } else if (lower.includes("discovery") || lower.includes("retail") || lower.includes("store") || lower.includes("endless")) {
+                        botText = "I redesigned the in-store discovery experience to be decision-first. I built guided flows, structured comparisons, and voice search, enabling store advisors to recommend products faster and more confidently.";
+                    } else if (lower.includes("funnel") || lower.includes("optimization") || lower.includes("commerce")) {
+                        botText = "I rebuilt the funnel around clarity and trust — simplifying pricing visibility, reorganizing the information hierarchy, and validating improvements with experiments. This delivered measurable uplift across PDP → Cart → Checkout.";
+                    } else if (lower.includes("impact")) {
+                        botText = "My work has consistently improved user intent, reduced friction, increased automation accuracy, and uplifted key funnel metrics — all while aligning cross-functional teams around shared product goals.";
+                    } else if (lower.includes("approach") || lower.includes("case study")) {
+                        botText = "I frame every case around the core problem, the behavioural insight, my structured approach, and the final measurable outcome. I keep my storytelling crisp, analytical, and grounded in real user behaviour.";
+                    } else {
+                        botText = "Here are the three flagship projects I’ve led:\n1️⃣ Intelligent Conversation Insights — transforming a chatbot into a conversation intelligence platform\n2️⃣ Assisted In-Store Discovery — guided decision flows for retail advisors\n3️⃣ Funnel Optimization — trust-first conversion improvements for a large commerce platform";
+                    }
+                }
+
+                // --- CATEGORY 3: AI & ANALYTICS ---
+                else if (lower.includes("data") || lower.includes("analytics") || lower.includes("ai") || lower.includes("automation")) {
+                    if (lower.includes("use data") || lower.includes("using data")) {
+                        botText = "I treat data as a behavioural signal. I use it to identify patterns, validate assumptions, and shape structured decisions. Data helps me find clarity quickly.";
+                    } else if (lower.includes("conversational ai")) {
+                        botText = "I approach AI from a human perspective — understanding intention, context, and failure patterns. My goal is to build systems that learn continuously and respond intelligently.";
+                    } else if (lower.includes("automation")) {
+                        botText = "By analyzing conversational journeys, mapping weak points, and designing confidence models. Automation improves naturally when the system understands intent more accurately.";
+                    } else if (lower.includes("collaborate") || lower.includes("data team")) {
+                        botText = "I work closely with data partners to define meaningful metrics, interpret behavioural cues, and translate insights into product actions that matter to users and the business.";
+                    } else if (lower.includes("ambiguity")) {
+                        botText = "I use data to narrow the problem space and guide direction — not dictate it. It gives structure to uncertainty and helps identify where clarity needs to be built next.";
+                    } else {
+                        botText = "I treat data as a behavioural signal to identify patterns and shape decisions. I approach AI from a human perspective, focusing on intention and continuous learning.";
+                    }
+                }
+
+                // --- CATEGORY 4: PRODUCT PHILOSOPHY ---
+                else if (lower.includes("philosophy") || lower.includes("decision") || lower.includes("problem") || lower.includes("empathy") || lower.includes("differentiate") || lower.includes("approach")) {
+                    if (lower.includes("decision")) {
+                        botText = "I design for decisions. I prioritize clarity, reduce noise, and create information hierarchies that help users move forward with confidence.";
+                    } else if (lower.includes("complex") || lower.includes("break down") || lower.includes("complexity")) {
+                        botText = "I break complexity into logical layers, understand the behavioural friction, and rebuild the experience so users interact with clarity rather than effort.";
+                    } else if (lower.includes("empathy")) {
+                        botText = "Empathy for me is noticing hesitation. Where users pause or feel uncertain — those moments show me exactly where the experience needs to evolve.";
+                    } else if (lower.includes("differentiate") || lower.includes("pm") || lower.includes("differentiation")) {
+                        botText = "I connect data, behaviour, and design into one cohesive narrative. I focus on understanding before building. And I make sure every product move reduces friction and increases confidence.";
+                    } else if (lower.includes("drive") || lower.includes("approach")) {
+                        botText = "I’m driven by the desire to make complex experiences feel simple — and measurable. When clarity improves, everything else follows.";
+                    } else {
+                        botText = "I believe great products aren’t just functional — they reduce cognitive load, guide decisions, and build trust with clarity. My approach blends user behaviour insights, structured experimentation, and system-level thinking.";
+                    }
+                }
+
+                // --- CATEGORY 5: SCHEDULE / CONTACT ---
+                else if (lower.includes("schedule") || lower.includes("call") || lower.includes("contact") || lower.includes("book") || lower.includes("reach") || lower.includes("relocation") || lower.includes("remote") || lower.includes("info")) {
+                    if (lower.includes("schedule") || lower.includes("book")) {
+                        botText = "Yes, absolutely. You can book a quick call using the “Schedule a Call” button on my portfolio. I’d love to connect and discuss full-time opportunities.";
+                    } else if (lower.includes("happen") || lower.includes("expect")) {
+                        botText = "It’s a simple, focused conversation where we walk through the role, expectations, and how my experience aligns with what your team is building.";
+                    } else if (lower.includes("reach") || lower.includes("way")) {
+                        botText = "The scheduling link is the fastest way. Email is great too — whichever works best for you.";
+                    } else if (lower.includes("relocation") || lower.includes("remote")) {
+                        botText = "Yes — I’m flexible, and open to roles based on the team, product space, and growth opportunity.";
+                    } else if (lower.includes("info") || lower.includes("need")) {
+                        botText = "Just the role, team focus, and a quick overview of what you’re looking for in a PM. I’ll take it from there.";
+                    } else {
+                        botText = "I can help you set up a 30-minute call with Swaathy. Click the 'Schedule a Call' button in the section below to pick a date and time.";
+                    }
+                }
+
+                setTimeout(() => {
+                    setMessages(prev => [...prev, { text: botText, isBot: true }]);
+                }, 600);
+            };
+
+            return (
+                <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+                    <AnimatePresence>
+                        {isOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                                className="bg-white rounded-2xl shadow-2xl w-80 md:w-96 mb-4 overflow-hidden border border-gray-100 flex flex-col"
+                                style={{ maxHeight: '600px' }}
+                            >
+                                <div className="bg-[#1C1C1C] p-4 flex justify-between items-center text-white shrink-0">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 bg-[#FF4D30] rounded-full flex items-center justify-center font-bold text-sm">AI</div>
+                                        <span className="font-bold font-['Outfit']">Ask Swaathy</span>
+                                    </div>
+                                    <button onClick={() => setIsOpen(false)} className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors rounded-full hover:bg-white/10">
+                                        {X && <X size={20} color="white" />}
+                                    </button>
+                                </div>
+
+                                <div className="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col gap-3">
+                                    {messages.map((msg, i) => (
+                                        <div key={i} className={`chat-message ${msg.isBot ? 'chat-bot' : 'chat-user'}`}>
+                                            {msg.text.split('\n').map((line, j) => (
+                                                <p key={j} className={j > 0 ? 'mt-1' : ''}>{line}</p>
+                                            ))}
+                                        </div>
+                                    ))}
+                                    <div ref={messagesEndRef} />
+                                </div>
+
+                                {/* Intent Buttons Area */}
+                                <div className="p-3 bg-gray-50 border-t border-gray-100">
+                                    {!activeCategory ? (
+                                        <div className="flex flex-wrap gap-2">
+                                            {Object.keys(intentMap).map((intent, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => handleSend(null, intent)}
+                                                    className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600 hover:border-[#FF4D30] hover:text-[#FF4D30] transition-colors"
+                                                >
+                                                    {intent}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center justify-between mb-1">
+                                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{activeCategory}</span>
+                                                <button
+                                                    onClick={() => handleSend(null, "← Back")}
+                                                    className="text-xs text-[#FF4D30] font-medium hover:underline"
+                                                >
+                                                    ← Back to Menu
+                                                </button>
+                                            </div>
+                                            <div className="flex flex-wrap gap-2">
+                                                {intentMap[activeCategory].map((question, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => handleSend(null, question)}
+                                                        className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-xs font-medium text-gray-600 hover:border-[#FF4D30] hover:text-[#FF4D30] transition-colors text-left"
+                                                    >
+                                                        {question}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <form onSubmit={handleSend} className="p-3 bg-white border-t border-gray-100 flex gap-2 shrink-0">
+                                    <input
+                                        type="text"
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        placeholder="Ask about my work..."
+                                        className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF4D30]/20"
+                                    />
+                                    <button type="submit" className="bg-[#FF4D30] text-white p-2 rounded-full hover:bg-[#e04328] transition-colors">
+                                        {Send && <Send size={18} />}
+                                    </button>
+                                </form>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="bg-[#FF4D30] text-white p-4 rounded-full shadow-lg hover:bg-[#e04328] transition-all hover:scale-105 active:scale-95 flex items-center gap-2 font-bold"
+                    >
+                        {isOpen ? (X && <X size={24} color="white" />) : (MessageCircle && <MessageCircle size={48} />)}
+                        {!isOpen && <span className="hidden md:inline pr-2">Ask Swaathy</span>}
+                    </button>
+                </div>
+            );
+        };
+
+        const ServiceCard = ({ label, title, details, delay }) => {
+            const framer = window.Motion || window.framerMotion;
+            const lucide = window.LucideReact || window.lucideReact || window.lucide || {};
+
+            const MotionComponent = framer?.motion?.div || 'div';
+            const IconComponent = lucide.ArrowRight || (({ size }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                </svg>
+            ));
+
+            if (!framer) console.warn("Framer Motion missing in ServiceCard");
+            if (!lucide.ArrowRight) console.warn("ArrowRight missing in ServiceCard");
+
+            return (
+                <MotionComponent
+                    {...(framer?.motion ? {
+                        initial: { opacity: 0, y: 30 },
+                        whileInView: { opacity: 1, y: 0 },
+                        transition: { delay, duration: 0.5 },
+                        viewport: { once: true }
+                    } : {})}
+                    className="bg-[#111111] p-8 rounded-[32px] relative group h-full flex flex-col items-start text-left hover:bg-[#161616] transition-colors border border-white/5"
+                >
+                    <span className="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3 block">{label}</span>
+                    <h3 className="text-xl md:text-2xl font-bold text-white mb-6 font-['Outfit'] leading-tight pr-8">{title}</h3>
+
+                    <ul className="space-y-3 mb-8 flex-1">
+                        {details.map((item, i) => (
+                            <li key={i} className="text-gray-400 text-sm leading-relaxed">
+                                {item}
+                            </li>
+                        ))}
+                    </ul>
+
+                    <div className="absolute bottom-8 right-8 w-10 h-10 bg-[#FF4D30] rounded-full flex items-center justify-center text-white shadow-lg shadow-orange-500/20 group-hover:scale-110 group-hover:bg-[#ff644c] group-hover:shadow-orange-500/60 transition-all duration-300">
+                        <IconComponent size={20} />
+                    </div>
+                </MotionComponent>
+            );
+        };
+
+        const TimelineItem = ({ data, index }) => {
+            const { motion } = window.Motion || window.framerMotion || {};
+            const Component = motion ? motion.div : 'div';
+            return (
+                <div className="flex gap-6 md:gap-12 relative pb-12 last:pb-0">
+                    <div className="hidden md:flex flex-col items-center w-24 shrink-0 pt-2">
+                        <div className="w-4 h-4 rounded-full bg-[#FF4D30] ring-4 ring-orange-100 mb-2"></div>
+                        {index !== 3 && <div className="w-0.5 h-full bg-gray-200 absolute top-8 bottom-0 left-[51px]"></div>}
+                    </div>
+
+                    <div className="md:hidden absolute left-[7px] top-3 bottom-0 w-0.5 bg-gray-200"></div>
+                    <div className="md:hidden absolute left-0 w-4 h-4 rounded-full bg-[#FF4D30] mt-2"></div>
+
+                    <Component
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        viewport={{ once: true }}
+                        className="flex-1 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow"
+                    >
+                        <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4 gap-2">
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-bold font-['Outfit'] text-[#1C1C1C] line-clamp-2 min-h-[2.8em]">{data.role}</h3>
+                                <p className="text-[#FF4D30] font-medium">{data.company}</p>
+                            </div>
+                            <span className="inline-block px-4 py-2 bg-gray-100 rounded-lg text-sm font-semibold text-gray-600 self-start">
+                                {data.period}
+                            </span>
+                        </div>
+
+                        <p className="text-gray-600 mb-4 italic text-sm border-l-2 border-[#FF4D30] pl-3">
+                            "{data.achievements[0]}"
+                        </p>
+
+                        <div className="flex flex-wrap gap-2">
+                            {data.tags.map((tag, i) => (
+                                <span key={i} className="text-xs font-bold px-3 py-1.5 rounded-full bg-orange-50 text-orange-600">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </Component>
+                </div>
+            );
+        };
+
+        function App() {
+            const { profile, core_expertise, experience, education } = resumeData;
+            const MotionDiv = motion ? motion.div : 'div';
+            const [activeTab, setActiveTab] = useState('experience');
+
+            return (
+                <div className="bg-gray-50/50 min-h-screen relative" id="home">
+                    <NavBar />
+
+                    {/* --- HERO SECTION --- */}
+                    <section className="pt-32 pb-20 md:pt-12 md:pb-12 px-6">
+                        <div className="container mx-auto">
+                            <div className="grid md:grid-cols-2 gap-12 items-center">
+                                {/* Left Column: Content */}
+                                <MotionDiv
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8 }}
+                                    className="text-left"
+                                >
+                                    <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-8 font-['Outfit'] text-[#1C1C1C]">
+                                        Shipping Products That Drive Decisions
+                                    </h1>
+
+                                    <p className="text-lg md:text-xl text-gray-500 mb-12 leading-relaxed max-w-2xl">
+                                        Senior PM at the intersection of AI, Platform Strategy, and Consumer Growth. Focused on 0→1 delivery and funnel optimization that scales
+                                    </p>
+
+                                    <div className="flex flex-wrap gap-4 mb-20">
+                                        <a href="#work" className="btn-primary">
+                                            Explore My Work
+                                        </a>
+                                        <a href="https://calendar.app.google/a9MtaoGJtK2biFut6" target="_blank" rel="noopener noreferrer" className="btn-outline">
+                                            Schedule a Call
+                                        </a>
+                                    </div>
+                                </MotionDiv>
+
+                                {/* Right Column: Image Placeholder */}
+                                <MotionDiv
+                                    initial={{ opacity: 0, x: 30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                    className="relative pl-0 md:pl-24"
+                                >
+                                    <div className="relative z-10">
+                                        <img
+                                            src="./src/figureine.png"
+                                            alt="Swaathy Kamaraj"
+                                        />
+                                    </div>
+                                </MotionDiv>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="services" className="py-24 bg-[#1C1C1C] text-white">
+                        <div className="container mx-auto px-6">
+                            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                                <div>
+                                    <h4 className="text-[#FF4D30] font-bold uppercase tracking-widest mb-2">Technical Expertise</h4>
+                                    <h2 className="text-4xl md:text-5xl font-bold font-['Outfit']">My Core <span className="text-[#FF4D30]">Competencies</span></h2>
+                                </div>
+                                <p className="text-gray-400 max-w-md leading-relaxed">
+                                    Leveraging a unique blend of technical background, design thinking, and data analytics to build scalable consumer products.
+                                </p>
+                            </div>
+
+                            <div className="grid md:grid-cols-3 gap-8">
+                                {services.map((s, i) => (
+                                    <ServiceCard key={i} {...s} delay={i * 0.2} />
+                                ))}
+                            </div>
+
+                            <div className="mt-16 flex flex-wrap gap-3 justify-center">
+                                {core_expertise.map((skill, i) => (
+                                    <span key={i} className="px-5 py-2 rounded-full border border-gray-700 hover:border-[#FF4D30] hover:text-[#FF4D30] transition-colors text-sm font-medium cursor-default">
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+
+
+                    {/* --- SECTION 4: FEATURED WORK --- */}
+                    <section id="work" className="py-24 bg-white text-[#1C1C1C]">
+                        <div className="container mx-auto px-6">
+                            <h2 className="text-3xl md:text-5xl font-bold font-['Outfit'] mb-16 text-center">Featured Work</h2>
+
+                            <div className="space-y-20">
+                                {/* Project 1 */}
+                                <div className="grid md:grid-cols-12 gap-8 items-center border-b border-gray-200 pb-16 last:border-0">
+                                    <div className="md:col-span-5">
+                                        <div className="text-[#FF4D30] font-bold tracking-widest text-sm mb-2">INTELLIGENCE PLATFORM</div>
+                                        <h3 className="text-3xl font-bold font-['Outfit'] mb-6">Intelligent Conversation Insights Platform</h3>
+
+                                        <div className="space-y-6">
+                                            <div>
+                                                <h4 className="font-bold text-[#1C1C1C] mb-2">The Challenge</h4>
+                                                <p className="text-gray-600">Thousands of conversations, but no clarity on why users struggled. Teams were guessing, training was reactive, and insights weren’t actionable.</p>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-[#1C1C1C] mb-2">What I Did</h4>
+                                                <p className="text-gray-600">I reframed the entire system from “monitoring a chatbot” to understanding human intent.</p>
+                                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-1 ml-2">
+                                                    <li>Designed a unified intent + utterance taxonomy</li>
+                                                    <li>Built failure-pattern detection & journey mapping</li>
+                                                    <li>Added confidence scoring to flag risky responses</li>
+                                                    <li>Created a learning loop for continuous improvement</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="md:col-span-1"></div>
+                                    <div className="md:col-span-6 bg-gray-50 p-8 rounded-3xl border border-gray-100">
+                                        <h4 className="font-bold text-xl mb-6 text-[#FF4D30]">Impact</h4>
+                                        <ul className="space-y-4">
+                                            {[
+                                                "↓ 15–25% reduction in repeated user issues through better intent detection",
+                                                "↑ 20–30% improvement in automation accuracy",
+                                                "Enabled faster product decisions by turning raw conversations into structured insights",
+                                                "Shifted product from reactive chatbot to conversation intelligence platform",
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-start gap-3">
+                                                    <div className="mt-[2px] text-[#FF4D30]">{CheckCircle && <CheckCircle size={18} />}</div>
+                                                    <span className="text-gray-700">{item}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                {/* Project 2 */}
+                                <div className="grid md:grid-cols-12 gap-8 items-center border-b border-gray-200 pb-16 last:border-0">
+                                    <div className="md:col-span-5 md:order-2">
+                                        <div className="text-[#FF4D30] font-bold tracking-widest text-sm mb-2">ASSISTED DISCOVERY</div>
+                                        <h3 className="text-3xl font-bold font-['Outfit'] mb-6">Assisted In-Store Discovery Experience</h3>
+
+                                        <div className="space-y-6">
+                                            <div>
+                                                <h4 className="font-bold text-[#1C1C1C] mb-2">The Challenge</h4>
+                                                <p className="text-gray-600">Store advisors couldn’t quickly guide customers to the right product. Search was slow, comparison was messy, and decision-making lacked structure.</p>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-[#1C1C1C] mb-2">What I Did</h4>
+                                                <p className="text-gray-600">I redesigned the experience as a guided decision system, not just a product catalog.</p>
+                                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-1 ml-2">
+                                                    <li>Built step-by-step discovery flows aligned to needs</li>
+                                                    <li>Added structured comparisons to highlight differences</li>
+                                                    <li>Integrated voice + quick search to speed up actions</li>
+                                                    <li>Standardized product metadata for quality recommendations</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="md:col-span-1 md:order-1"></div>
+                                    <div className="md:col-span-6 bg-gray-50 p-8 rounded-3xl border border-gray-100 md:order-1">
+                                        <h4 className="font-bold text-xl mb-6 text-[#FF4D30]">Impact</h4>
+                                        <ul className="space-y-4">
+                                            {[
+                                                "↓ 30–40% reduction in decision time for store advisors",
+                                                "↑ 15–25% uplift in high-intent interactions",
+                                                "Improved advisor confidence and consistency across stores",
+                                                "Reduced friction in discovery → comparison → selection",
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-start gap-3">
+                                                    <div className="mt-[2px] text-[#FF4D30]">{CheckCircle && <CheckCircle size={18} />}</div>
+                                                    <span className="text-gray-700">{item}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                {/* Project 3 */}
+                                <div className="grid md:grid-cols-12 gap-8 items-center">
+                                    <div className="md:col-span-5">
+                                        <div className="text-[#FF4D30] font-bold tracking-widest text-sm mb-2">FUNNEL OPTIMIZATION</div>
+                                        <h3 className="text-3xl font-bold font-['Outfit'] mb-6">Clarity-Driven Funnel Optimization</h3>
+
+                                        <div className="space-y-6">
+                                            <div>
+                                                <h4 className="font-bold text-[#1C1C1C] mb-2">The Challenge</h4>
+                                                <p className="text-gray-600">Strong traffic, but drop-offs mid-funnel. Users lacked clarity around pricing, offers, and product hierarchy — creating hesitation.</p>
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-[#1C1C1C] mb-2">What I Did</h4>
+                                                <p className="text-gray-600">I rebuilt the funnel around trust and comprehension.</p>
+                                                <ul className="list-disc list-inside text-gray-600 mt-2 space-y-1 ml-2">
+                                                    <li>Redesigned information hierarchy to align with mental models</li>
+                                                    <li>Cleaned up pricing, promotions, and variation visibility</li>
+                                                    <li>Simplified navigation and reduced cognitive load</li>
+                                                    <li>Validated changes with structured A/B testing</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="md:col-span-1"></div>
+                                    <div className="md:col-span-6 bg-gray-50 p-8 rounded-3xl border border-gray-100">
+                                        <h4 className="font-bold text-xl mb-6 text-[#FF4D30]">Impact</h4>
+                                        <ul className="space-y-4">
+                                            {[
+                                                "+7–10% improvement in forward funnel movement",
+                                                "+5–8% add-to-cart intent uplift",
+                                                "Users progressed with more confidence and less friction"
+                                            ].map((item, i) => (
+                                                <li key={i} className="flex items-start gap-3">
+                                                    <div className="mt-1 text-[#FF4D30]">{CheckCircle && <CheckCircle size={18} />}</div>
+                                                    <span className="text-gray-700">{item}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- THE JOURNEY SECTION --- */}
+                    <section id="journey" className="py-24 px-6 bg-[#1C1C1C] relative overflow-hidden">
+                        {/* Background Elements */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+
+                        <div className="container mx-auto relative z-10 text-center">
+                            <h2 className="text-4xl md:text-5xl font-bold font-['Outfit'] text-white mb-12">The <span className="text-[#FF4D30]">Journey</span></h2>
+
+                            {/* Tab Switcher */}
+                            <div className="flex justify-center mb-16">
+                                <div className="bg-white/10 p-1.5 rounded-full inline-flex backdrop-blur-md border border-white/10">
+                                    <button
+                                        onClick={() => setActiveTab('experience')}
+                                        className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${activeTab === 'experience'
+                                            ? 'bg-[#FF4D30] text-white shadow-lg'
+                                            : 'text-white/60 hover:text-white'
+                                            }`}
+                                    >
+                                        EXPERIENCE
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveTab('education')}
+                                        className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 ${activeTab === 'education'
+                                            ? 'bg-[#FF4D30] text-white shadow-lg'
+                                            : 'text-white/60 hover:text-white'
+                                            }`}
+                                    >
+                                        EDUCATION
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Content Grid */}
+                            <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
+                                <AnimatePresence mode='wait'>
+                                    {activeTab === 'experience' ? (
+                                        experience.map((job, i) => {
+                                            const isCurrent = false;
+                                            return (
+                                                <MotionDiv
+                                                    key={`exp-${i}`}
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -20 }}
+                                                    transition={{ duration: 0.3, delay: i * 0.1 }}
+                                                    className="bg-[#111111] p-8 rounded-3xl border border-white/5 hover:bg-[#161616] transition-all duration-300 flex flex-col h-full group w-full md:w-[23%] text-left min-h-[350px]"
+                                                >
+                                                    {/* Header */}
+                                                    <div className="mb-4">
+                                                        <div className="flex justify-between items-start gap-2 mb-2">
+                                                            <h3 className="text-xl font-bold text-white leading-tight min-h-[3.2rem] line-clamp-2">{job.role}</h3>
+                                                            {isCurrent && (
+                                                                <span className="shrink-0 px-2 py-0.5 rounded bg-[#FF4D30]/20 text-[#FF4D30] text-[10px] font-bold tracking-wider uppercase border border-[#FF4D30]/20">
+                                                                    Current
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-[#FF4D30] font-medium text-sm mb-1">{job.company}</p>
+                                                        <p className="text-white/40 text-xs">{job.period}</p>
+                                                    </div>
+
+                                                    {/* Quote/Description */}
+                                                    <div className="mb-6 flex-grow">
+                                                        <div className="border-l-2 border-[#FF4D30] pl-4 py-1">
+                                                            <p className="text-white/70 italic text-sm leading-relaxed">
+                                                                "{job.achievements[0]}"
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Tags */}
+                                                    <div className="flex flex-wrap gap-2 mt-auto">
+                                                        {job.tags.slice(0, 3).map((tag, tIndex) => (
+                                                            <span key={tIndex} className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-medium text-white/60 border border-white/10">
+                                                                {tag}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </MotionDiv>
+                                            );
+                                        })
+                                    ) : (
+                                        education.map((edu, i) => {
+                                            const IconExp = lucideIcons[edu.icon] || Briefcase;
+                                            return (
+                                                <MotionDiv
+                                                    key={`edu-${i}`}
+                                                    initial={{ opacity: 0, y: 20 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -20 }}
+                                                    transition={{ duration: 0.3, delay: i * 0.1 }}
+                                                    className="bg-[#111111] p-8 rounded-3xl border border-white/5 hover:bg-[#161616] transition-all duration-300 flex flex-col justify-center h-full group w-full md:w-[23%] min-h-[350px]"
+                                                >
+                                                    <div className="mb-6 flex justify-center">
+                                                        <div className="p-3 bg-white/5 rounded-xl text-[#FF4D30] group-hover:scale-110 transition-transform duration-300">
+                                                            {IconExp && <IconExp size={40} strokeWidth={1.5} />}
+                                                        </div>
+                                                    </div>
+                                                    <h3 className="text-xl font-bold mb-2 text-white">{edu.degree}</h3>
+                                                    <p className="text-white/60 font-medium mb-4">{edu.school}</p>
+                                                    <div className="mt-auto pt-4 border-t border-white/10 w-full">
+                                                        <span className="inline-block px-4 py-1.5 bg-white/10 rounded-full text-xs font-bold text-white/80">
+                                                            {edu.year}
+                                                        </span>
+                                                    </div>
+                                                </MotionDiv>
+                                            );
+                                        })
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- SCHEDULE A CALL --- */}
+                    <section id="schedule" className="py-24 px-6 bg-gray-50 text-center">
+                        <div className="container mx-auto max-w-2xl">
+                            <h2 className="text-3xl md:text-5xl font-bold font-['Outfit'] mb-6 text-[#1C1C1C]">
+                                Schedule a Call
+                            </h2>
+                            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                                If you’d like to discuss my product leadership experience and role alignment, please schedule a 15-minute call.
+                                Happy to walk through how I think, lead, and deliver as a Senior Product Manager.
+                            </p>
+                            <a
+                                href="https://calendar.app.google/a9MtaoGJtK2biFut6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-primary mx-auto inline-flex"
+                            >
+                                Schedule a Call
+                            </a>
+                        </div>
+                    </section>
+
+                    {/* --- FOOTER --- */}
+                    <section id="contact" className="bg-[#1C1C1C] text-white py-16 px-6 border-t border-gray-800">
+                        <div className="container mx-auto">
+                            <div className="grid md:grid-cols-4 gap-12">
+                                <div className="col-span-2">
+                                    <div className="flex items-center gap-2 mb-6">
+                                        <div className="w-10 h-10 bg-[#FF4D30] rounded-full flex items-center justify-center text-white font-bold text-xl">S</div>
+                                        <span className="font-['Outfit'] font-bold text-2xl">Swaathy Kamaraj<span className="text-[#FF4D30]">.</span></span>
+                                    </div>
+                                    <p className="text-gray-400 max-w-sm">
+                                        Senior Product Manager focused on building data-driven, customer-centric digital products.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h4 className="font-bold text-lg mb-6">Contact</h4>
+                                    <ul className="space-y-4 text-gray-400">
+                                        <li className="flex items-center gap-2">{Mail && <Mail size={16} className="text-[#FF4D30]" />} {profile.email}</li>
+                                        <li className="flex items-center gap-2">{MapPin && <MapPin size={16} className="text-[#FF4D30]" />} {profile.location}</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4 className="font-bold text-lg mb-6">Social</h4>
+                                    <div className="flex gap-4">
+                                        <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#FF4D30] transition-colors">
+                                            {Linkedin && <Linkedin size={20} />}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <ChatBot />
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+    <script>
+        function trackVisit() {
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbxcFnOWrLiEgEhjDVCOD5iHCwir7ms2mqZ7ZrR7At7tpB5gH_sUGgwCYjgKuot1KKmJ2Q/exec"; // Paste your Google Script URL
+
+            const params = new URLSearchParams({
+                ua: navigator.userAgent,
+                lang: navigator.language,
+                ref: document.referrer || "Direct",
+                path: window.location.pathname + window.location.hash
+            });
+
+            // We use 'keepalive' to ensure the request finishes even if the user leaves
+            fetch(`${scriptUrl}?${params.toString()}`, { mode: 'no-cors', keepalive: true });
+        }
+
+        // Track initial load
+        trackVisit();
+
+        // Track "navigation" in your SPA (when the hash or URL changes)
+        window.addEventListener('popstate', trackVisit);
+        window.addEventListener('hashchange', trackVisit);
+    </script>
+</body>
+
+</html>
